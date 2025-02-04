@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/data/jpa
+           http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
+       default-lazy-init="true">
+
+    <!-- usada para ativar o suporte à injeção de dependências e outras funcionalidades baseadas em anotações  -->
+    <context:annotation-config/>
+    <!-- é usada no Spring para escanear um pacote específico (e seus subpacotes) em busca de classes anotadas com estereótipos como @Component, @Service, @Repository ou @Controller -->
+    <context:component-scan base-package="br.com.atom"/>
+
+    <!-- Define a conexão com o banco de dados -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+        <property name="url" value="jdbc:sqlserver://localhost:1433;databaseName=java_spring;encrypt=false"/>
+        <property name="username" value="sa"/>
+        <property name="password" value="@dminti35"/>
+    </bean>
+
+    <!-- Define as configurações do JPA -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" scope="singleton">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="SQL_SERVER"/>
+                <property name="generateDdl" value="true"/>
+                <property name="showSql" value="true"/>
+            </bean>
+        </property>
+        <property name="persistenceUnitName" value="projeto-spring-data-aula"/>
+    </bean>
+
+    <!-- Ativa controle transacional -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" scope="singleton">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- usada para ativar o suporte ao Spring Data JPA e configurar automaticamente os repositórios no pacote especificado -->
+    <jpa:repositories base-package="br.com.atom.dao"/>
+
+</beans>
