@@ -1,10 +1,8 @@
 package br.com.atom.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class UsuarioSpringData implements Serializable {
@@ -18,6 +16,9 @@ public class UsuarioSpringData implements Serializable {
     private String nome;
     private String email;
     private int idade;
+
+    @OneToMany(mappedBy = "usuarioSpringData", orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Telefone> telefones;
 
     public long getId() {
         return id;
@@ -65,5 +66,13 @@ public class UsuarioSpringData implements Serializable {
 
     public void setIdade(int idade) {
         this.idade = idade;
+    }
+
+    public List<Telefone> getTelefones() {
+        return telefones;
+    }
+
+    public void setTelefones(List<Telefone> telefones) {
+        this.telefones = telefones;
     }
 }

@@ -1,4 +1,6 @@
 import br.com.atom.dao.InterfaceSpringDataUser;
+import br.com.atom.dao.InterfaceTelefone;
+import br.com.atom.model.Telefone;
 import br.com.atom.model.UsuarioSpringData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +18,8 @@ public class AppSpringDataTest {
 
     @Autowired
     private InterfaceSpringDataUser interfaceSpringDataUser;
+    @Autowired
+    private InterfaceTelefone interfaceTelefone;
 
     @Test
     public void testeInsert() {
@@ -76,12 +80,17 @@ public class AppSpringDataTest {
 
     @Test
     public void testeConsultaNome(){
-        List<UsuarioSpringData> lista = interfaceSpringDataUser.buscaPorNome("Victor");
+        List<UsuarioSpringData> lista = interfaceSpringDataUser.buscaPorNome("Alexandre");
 
         for (UsuarioSpringData usuarioSpringData : lista) {
             System.out.println("----------------------------------------");
             System.out.println("Id: " + usuarioSpringData.getId());
             System.out.println("Nome: " + usuarioSpringData.getNome());
+
+            for (Telefone telefone : usuarioSpringData.getTelefones()) {
+                System.out.println("Telefone: " + telefone.getNumero());
+            }
+
 
         }
     }
@@ -102,4 +111,15 @@ public class AppSpringDataTest {
     public void testeUpdateEmailPorNome(){
         interfaceSpringDataUser.updateEmailPorNome("victor@gmail.com", "Alexandre Peres");
     }
+
+    @Test
+    public void testeInsertTelefone() {
+        Optional<UsuarioSpringData> usuarioSpringData = interfaceSpringDataUser.findById(3L);
+        Telefone telefone = new Telefone();
+        telefone.setNumero("92985753215");
+        telefone.setTipo("CELULAR");
+        telefone.setUsuarioSpringData(usuarioSpringData.get());
+        interfaceTelefone.save(telefone);
+    }
+
 }
